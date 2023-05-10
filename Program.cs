@@ -103,6 +103,7 @@ namespace Calc
                 }
             }
             Console.WriteLine(doubleStack.Pop());
+
         }
     }
 }
