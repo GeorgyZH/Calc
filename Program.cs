@@ -23,7 +23,7 @@ namespace Calc
             priority['+'] = 3;
             priority['-'] = 3;
 
-            //заполнение стека операциями и числами
+            //формирование польской записи в стек
             foreach (var item in input)
             {
                 if (item == "")
@@ -59,14 +59,20 @@ namespace Calc
                 res.AddLast(stack.Pop().ToString());
 
             }
+
+
             foreach (var item in res)
             {
                 Console.Write(item + " ");
             }
             Console.WriteLine();
+
+            //Начала работы подсчета обратной польской записью
+
             //стек для подсчета обратной польской записи
             Stack<double> doubleStack = new();
 
+            //словарь делегатов, которые используются в качестве операций над числами
             var operationts = new Dictionary<char, Func<double, double, double>>();
             operationts.Add('+',(x,y) => x+y);
             operationts.Add('*',(x,y) => x*y);
@@ -83,6 +89,8 @@ namespace Calc
                 }
                 else if (operationts.ContainsKey(char.Parse(item)))
                 {
+                    //так как парсинг идет по числам и знакам, число -11 будет в стеке как 11 -, то есть может быть ошибка
+                    //поэтому проводится проверка на наличие второго операдна
                     double op1 = doubleStack.Pop();
                     double op2;
                     if (doubleStack.Count == 0)
@@ -90,38 +98,12 @@ namespace Calc
                     else
                         op2 = doubleStack.Pop();
                     doubleStack.Push(operationts[char.Parse(item)](op1, op2));
+                    //выводит все операции которые совершаются в консоль
+                    Console.WriteLine($"{op2} {item} {op1} = {doubleStack.Peek()}");
                 }
                 else
                 {
                     throw new ArgumentException();
-                    //double op1 = doubleStack.Pop();
-                    //double op2;
-                    //if (doubleStack.Count == 0)
-                    //    op2 = 0;
-                    //else
-                    //    op2 = doubleStack.Pop();
-
-                    //switch (item)
-                    //{
-                    //    case "+":
-                    //        doubleStack.Push(op2 + op1);
-                    //        break;
-                    //    case "*":
-                    //        doubleStack.Push(op2 * op1);
-                    //        break;
-                    //    case "/":
-                    //        doubleStack.Push(op2 / op1);
-                    //        break;
-                    //    case "-":
-                    //        doubleStack.Push(op2 - op1);
-                    //        break;
-                    //    case "^":
-                    //        doubleStack.Push(Math.Pow(op2, op1));
-                    //        break;
-                    //    default:
-                    //        throw new InvalidOperationException();
-                    //}
-                    //Console.WriteLine($"{op2} {item} {op1} = {doubleStack.Peek()}");
                 }
             }
             Console.WriteLine(doubleStack.Pop());
