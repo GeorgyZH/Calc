@@ -6,12 +6,13 @@ namespace Calc
     {
         static void Main(string[] args)
         {
+            //ввод выражения
             string? expression = Console.ReadLine();
 
             LinkedList<string> res = new();
 
             Stack<char> stack = new();
-
+            //разбиение его на токены
             string[] input = Regex.Split(expression, @"(\D)");
 
             Dictionary<char, int> priority = new Dictionary<char, int>();
@@ -22,6 +23,7 @@ namespace Calc
             priority['+'] = 3;
             priority['-'] = 3;
 
+            //заполнение стека операциями и числами
             foreach (var item in input)
             {
                 if (item == "")
@@ -62,6 +64,7 @@ namespace Calc
                 Console.Write(item + " ");
             }
             Console.WriteLine();
+            //стек для подсчета обратной польской записи
             Stack<double> doubleStack = new();
 
             foreach (var item in res)
